@@ -1,33 +1,66 @@
+
+import { useState, useEffect } from 'react';
 import './App.css';
 import Notes from './components/Notes';
+import serviceNotes from './services/notes'
+import FormNote from './components/FormNote';
 
-const notes = [
-  {
-    id: 1,
-    content: 'HTML is easy',
-    date: '2019-05-30T17:30:31.098Z',
-    important: true,
-  },
-  {
-    id: 2,
-    content: 'Browser can execute only JavaScript',
-    date: '2019-05-30T18:39:34.091Z',
-    important: false,
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    date: '2019-05-30T19:20:14.298Z',
-    important: true,
-  },
-]
 
 function App() {
-  return (
-   <>
-   <Notes notes={notes} />
-   </>
-  );
+ const[notes , setNotes]= useState([]);
+ const [newNote, setNewNote] = useState([])
+
+
+   useEffect(()=>{
+     serviceNotes
+     .getAllNotes()
+     .then(initialNotes =>{
+       setNotes(initialNotes)
+     })
+   }, [])
+   const handleSubmit = (event)=>{
+    event.preventDefault();
+    debugger;
+    const newObject = {
+        content: newNote,
+        important: false
+    }
+     serviceNotes
+     .createNote(newObject)
+     .then((data)=> {
+      setNotes(notes.concat(data))
+     }).catch(e =>{console.error(e)})
+    //setNotes(notes.concat(newObject))
+}
+const handleChange=(event)=>{
+  setNewNote(event.target.value)
+
+}
+ return (
+    <>
+     <ol>
+     {notes.map((note, i)=> {
+        return  <Notes key={i}  note={note} />
+    })}
+   </ol>
+   <form onSubmit={handleSubmit}>
+        <div>
+            <input onChange={handleChange} type="text" />
+            <button type="">Guardar</button>
+        </div>
+    </form>
+    </>
+ );
 }
 
 export default App;
+//
+//In this code, we have a functional component `App` that renders the `Notes` component. The `notes` array contains the initial data for the notes.
+//
+//The commented-out code was used to fetch the notes data from an external service. It has been replaced with a static `notes` array for simplicity.
+//
+//The `useEffect` hook was used to fetch the notes data when the component mounts. This hook has been removed since we are now using a static `notes` array.
+//
+//The `useState` hook was used to manage the state of the notes data. This hook has been removed since we are now using a static `notes` array.
+//
+//The `Notes` component is used to display the notes data. It receives the `notes` array as a prop..</s>
