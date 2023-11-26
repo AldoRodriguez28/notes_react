@@ -1,15 +1,11 @@
 import React from 'react'
 
 export default function Notes(props) {
-    const notes = props.notes
+    const note = props.note
 
   return (
    <>
-   <ol>
-    {notes.map(note => {
-        return <li>{note.content}</li>
-    })}
-   </ol>
+   <li key={note.id}>{note.content}</li>
    </>
   )
 }
